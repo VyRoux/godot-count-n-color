@@ -1,0 +1,117 @@
+[gd_scene load_steps=2 format=3 uid="uid://bfdriko870wwy"]
+
+[ext_resource type="Script" uid="uid://c0rmlasmr1pl2" path="res://Scenes/Demos/game_demo.gd" id="1_knrca"]
+
+[node name="GameDemo" type="Control"]
+layout_mode = 3
+anchor_left = 0.019000001
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -21.888
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_knrca")
+metadata/_edit_lock_ = true
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.055000003
+anchor_right = 1.0550001
+anchor_bottom = 0.32900003
+offset_left = -112.64
+offset_right = 149.6399
+offset_bottom = 6.8079834
+color = Color(0, 0, 0, 1)
+
+[node name="ColorSpawner" type="GridContainer" parent="."]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.32900003
+offset_left = 1.0
+offset_bottom = 0.0079956055
+grow_vertical = 2
+theme_override_constants/h_separation = 10
+columns = 5
+
+[node name="ColorBox1" type="ColorRect" parent="ColorSpawner"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorBox2" type="ColorRect" parent="ColorSpawner"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorBox3" type="ColorRect" parent="ColorSpawner"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorBox4" type="ColorRect" parent="ColorSpawner"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorBox5" type="ColorRect" parent="ColorSpawner"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="IntructionText" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.001
+anchor_top = 0.40100002
+anchor_right = 1.0
+anchor_bottom = 0.56200004
+offset_left = -0.15200007
+offset_top = 0.15197754
+offset_right = 1.0
+offset_bottom = -0.17602539
+theme_override_font_sizes/normal_font_size = 25
+text = "Teks Disini"
+horizontal_alignment = 1
+
+[node name="ScoreText" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.09
+anchor_top = 0.34
+anchor_right = 0.16000001
+anchor_bottom = 0.39400002
+offset_left = 0.31999207
+offset_top = -0.32000732
+offset_right = -28.320007
+offset_bottom = -12.312012
+theme_override_font_sizes/font_size = 25
+text = "Score: "
+
+[node name="ButtonContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.202
+anchor_top = 0.56200004
+anchor_right = 0.80700004
+anchor_bottom = 1.0
+offset_left = 0.29599
+offset_top = -0.17602539
+offset_right = 0.3359375
+
+[node name="PickColor0" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 25
+
+[node name="PickColor1" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 25
+
+[node name="PickColor2" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 25
