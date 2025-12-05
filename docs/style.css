@@ -4,8 +4,6 @@
     --secondary-color: #FFD700;
     --success-color: #32CD32;
     --error-color: #FF6347;
-    --chaos-color: #8B0000; /* Dark Red for Chaos Event */
-    --bonus-color: #008000; /* Dark Green for Bonus Round */
     --text-color: #333;
     --light-gray: #f4f4f4;
 }
@@ -20,7 +18,7 @@ body {
     align-items: center;
     min-height: 100vh;
     text-align: center;
-    overflow: hidden;
+    overflow: hidden; /* Penting untuk latar belakang */
 }
 
 /* --- Latar Belakang Animasi --- */
@@ -36,8 +34,9 @@ body {
 
 .floating-shape {
     position: absolute;
-    opacity: 0.4;
-    animation: float-up 20s infinite linear;
+    bottom: -150px; /* Mulai dari bawah layar */
+    background-color: rgba(255, 255, 255, 0.2);
+    animation: float-up 25s infinite linear;
 }
 
 /* --- Game Container --- */
@@ -72,14 +71,16 @@ h1 {
     font-weight: 800;
 }
 
-.score-container {
+.level-container {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
+    font-size: 1.2em;
+    font-weight: 700;
 }
 
-#stars {
-    font-size: 1.5em;
+#current-level {
+    color: var(--primary-color);
 }
 
 main {
@@ -110,24 +111,6 @@ main {
 }
 
 /* --- Elemen Permainan --- */
-#event-indicator {
-    height: 30px;
-    font-size: 1.5em;
-    font-weight: 800;
-    margin-bottom: 10px;
-    animation: pulse 1s infinite;
-}
-
-#event-indicator.chaos {
-    color: var(--chaos-color);
-    text-shadow: 0 0 10px var(--chaos-color);
-}
-
-#event-indicator.bonus {
-    color: var(--bonus-color);
-    text-shadow: 0 0 10px var(--bonus-color);
-}
-
 #shapes-container {
     display: flex;
     justify-content: center;
@@ -184,17 +167,44 @@ main {
     font-size: 1.8em;
     font-weight: 700;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
+    transition: transform 0.2s, background-color 0.2s, opacity 0.2s;
     box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
 
-.answer-btn:hover {
+.answer-btn:hover:not(:disabled) {
     transform: scale(1.1);
     background-color: #483D8B;
 }
 
-.answer-btn:active {
+.answer-btn:active:not(:disabled) {
     transform: scale(0.95);
+}
+
+.answer-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#next-btn {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+#next-btn:hover {
+    background-color: #28a745;
+    transform: translateY(-2px);
+}
+
+#next-btn.hidden {
+    display: none;
 }
 
 #feedback {
@@ -254,16 +264,10 @@ footer {
 }
 
 @keyframes float-up {
-    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-    10% { opacity: 0.4; }
-    90% { opacity: 0.4; }
-    100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    to {
+        transform: translateY(-120vh) rotate(360deg);
+        opacity: 0;
+    }
 }
 
 /* --- Desain Responsif --- */
@@ -277,7 +281,7 @@ footer {
     }
     body { align-items: stretch; }
     h1 { font-size: 1.8em; }
-    #stars { font-size: 1.2em; }
+    .level-container { font-size: 1em; }
     .character { font-size: 4em; }
     .shape {
         width: 60px;

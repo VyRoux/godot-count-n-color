@@ -15,11 +15,11 @@
     <div class="game-container">
         <header>
             <h1>Count-n-Color</h1>
-            <div class="score-container">
-                <p>Poin:</p>
-                <div id="stars">
-                    <!-- Bintang akan ditambahkan oleh JavaScript -->
-                </div>
+            <div class="level-container">
+                <p>Level:</p>
+                <span id="current-level">1</span>
+                <p>/</p>
+                <span id="total-levels">5</span>
             </div>
         </header>
 
@@ -28,35 +28,36 @@
             <div id="start-screen" class="screen active">
                 <div class="character">🌞</div>
                 <h2>Halo, Ayo Bermain!</h2>
-                <p>Waspadai <strong>Chaos Event</strong> dan dapatkan poin sebanyak-banyaknya!</p>
+                <p>Hitung bentuk dan warna untuk menang!</p>
                 <button id="start-btn">Mulai Bermain</button>
             </div>
 
             <!-- Layar Permainan -->
             <div id="play-screen" class="screen">
-                <div id="event-indicator"></div>
                 <div id="shapes-container">
                     <!-- Bentuk akan muncul di sini -->
                 </div>
                 <h2 id="question">Pertanyaan akan muncul di sini</h2>
                 <div id="answer-buttons">
-                    <!-- Tombol jawaban akan dibuat secara dinamis -->
+                    <button class="answer-btn" data-answer="0">1</button>
+                    <button class="answer-btn" data-answer="1">2</button>
+                    <button class="answer-btn" data-answer="2">3</button>
                 </div>
+                <button id="next-btn" class="hidden">Lanjut</button>
                 <p id="feedback"></p>
             </div>
 
-            <!-- Layar Game Over (Baru) -->
-            <div id="game-over-screen" class="screen">
-                <div class="character">😢</div>
-                <h2>Game Over!</h2>
-                <p id="game-over-reason"></p>
-                <p>Poin akhir kamu: <span id="final-score">0</span></p>
+            <!-- Layar Selesai -->
+            <div id="end-screen" class="screen">
+                <div class="character">🎉</div>
+                <h2>Hore, Kamu Hebat!</h2>
+                <p>Kamu sudah menyelesaikan semua level!</p>
                 <button id="restart-btn">Main Lagi</button>
             </div>
         </main>
 
         <footer>
-            <p>Didesain dengan ❤️ untuk Tugas GameDev Jir</p>
+            <p>Didesain dengan ❤️ untuk Tugas GameDev</p>
         </footer>
     </div>
 
