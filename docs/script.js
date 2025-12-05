@@ -15,104 +15,127 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalLevelsEl = document.getElementById('total-levels');
     const animatedBg = document.querySelector('.animated-bg');
 
-    // --- Konfigurasi Game ---
-    const MAX_LEVEL = 50;
-    const COLORS = { merah: '#FF6B6B', biru: '#4DABF7', hijau: '#51CF66', kuning: '#FFD43B', ungu: '#845EC2', pink: '#FFC6FF', orange: '#FFA500' };
-    const SHAPES = { kotak: 'square', lingkaran: '', segitiga: 'triangle' };
+    // --- Data Level (Storyboard) ---
+    const levels = [
+        {
+            shapes: [
+                { type: 'kotak', color: 'merah' }, { type: 'kotak', color: 'merah' }, { type: 'kotak', color: 'merah' },
+                { type: 'kotak', color: 'hijau' },
+                { type: 'lingkaran', color: 'biru' },
+                { type: 'segitiga', color: 'kuning' }
+            ],
+            question: { type: 'kotak', color: 'merah' },
+            choices: [2, 3, 5]
+        },
+        {
+            shapes: [
+                { type: 'segitiga', color: 'kuning' }, { type: 'segitiga', color: 'kuning' },
+                { type: 'lingkaran', color: 'merah' }, { type: 'lingkaran', color: 'merah' },
+                { type: 'lingkaran', color: 'hijau' },
+                { type: 'segitiga', color: 'biru' }
+            ],
+            question: { type: 'lingkaran', color: 'merah' },
+            choices: [1, 2, 4]
+        },
+        {
+            shapes: [
+                { type: 'lingkaran', color: 'biru' }, { type: 'lingkaran', color: 'biru' }, { type: 'lingkaran', color: 'biru' },
+                { type: 'lingkaran', color: 'biru' },
+                { type: 'kotak', color: 'kuning' }, { type: 'kotak', color: 'kuning' },
+                { type: 'segitiga', color: 'merah' }
+            ],
+            question: { type: 'lingkaran', color: 'biru' },
+            choices: [3, 4, 5]
+        },
+        {
+            shapes: [
+                { type: 'segitiga', color: 'hijau' }, { type: 'segitiga', color: 'hijau' }, { type: 'segitiga', color: 'hijau' },
+                { type: 'segitiga', color: 'hijau' }, { type: 'segitiga', color: 'hijau' },
+                { type: 'kotak', color: 'merah' }, { type: 'kotak', color: 'merah' },
+                { type: 'lingkaran', color: 'kuning' }
+            ],
+            question: { type: 'segitiga', color: 'hijau' },
+            choices: [4, 5, 6]
+        },
+        {
+            shapes: [
+                { type: 'kotak', color: 'merah' }, { type: 'kotak', color: 'hijau' }, { type: 'kotak', color: 'biru' },
+                { type: 'lingkaran', color: 'merah' }, { type: 'lingkaran', color: 'hijau' }, { type: 'lingkaran', color: 'biru' },
+                { type: 'segitiga', color: 'merah' }, { type: 'segitiga', color: 'hijau' }, { type: 'segitiga', color: 'biru' }
+            ],
+            question: { type: 'segitiga', color: 'biru' },
+            choices: [0, 1, 2]
+        }
+    ];
+
+    // --- Konstanta & Variabel Game ---
+    const COLORS = { merah: '#FF6B6B', biru: '#4DABF7', hijau: '#51CF66', kuning: '#FFD43B' };
+    const SHAPE_CLASS_MAP = { kotak: 'square', lingkaran: '', segitiga: 'triangle' };
     
     let currentLevel = 0;
-    let currentLevelData = {}; // Untuk menyimpan data level saat ini
 
     // --- Fungsi Utilitas ---
-    function getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-    function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
 
-    // --- Fungsi Latar Belakang Animasi ---
+    // --- Fungsi Latar Belakang Animasi (Diperbaiki) ---
     function createAnimatedBackground() {
         const colors = Object.values(COLORS);
-        const numberOfShapes = 20;
+        const numberOfShapes = 20; // Lebih banyak bentuk untuk efek yang lebih bagus
+
         for (let i = 0; i < numberOfShapes; i++) {
             const shape = document.createElement('div');
             shape.classList.add('floating-shape');
-            shape.style.borderRadius = getRandomItem(['50%', '10%']);
+            
+            // Pilih bentuk acak
+            const isCircle = Math.random() > 0.5;
+            if (isCircle) {
+                shape.style.borderRadius = '50%';
+            } else {
+                shape.style.borderRadius = '10%';
+            }
+
+            // Atur ukuran, posisi, warna, dan delay animasi secara acak
             const size = Math.random() * 60 + 20;
-            shape.style.width = `${size}px`; shape.style.height = `${size}px`;
+            shape.style.width = `${size}px`;
+            shape.style.height = `${size}px`;
             shape.style.left = `${Math.random() * 100}%`;
             shape.style.backgroundColor = getRandomItem(colors);
             shape.style.animationDelay = `${Math.random() * 15}s`;
             shape.style.animationDuration = `${Math.random() * 10 + 20}s`;
+
             animatedBg.appendChild(shape);
         }
     }
-
-    // --- Level Generator Otomatis (LOGIKA BENAR) ---
-    function generateLevel(levelNumber) {
-        // 1. Tentukan kesulitan berdasarkan level
-        let availableColors = Object.keys(COLORS);
-        let availableShapes = Object.keys(SHAPES);
-        
-        // Batasi warna dan bentuk di level awal
-        if (levelNumber <= 5) availableColors = availableColors.slice(0, 4);
-        if (levelNumber <= 2) availableShapes = availableShapes.slice(0, 2);
-
-        let totalShapes = 4 + Math.floor(levelNumber / 3);
-        totalShapes = Math.min(totalShapes, 15); // Maksimal 15 bentuk
-
-        // 2. Buat pertanyaan (target)
-        const targetShape = getRandomItem(availableShapes);
-        const targetColor = getRandomItem(availableColors);
-        
-        // 3. Tentukan jumlah jawaban benar secara acak
-        let correctAnswer = Math.floor(Math.random() * (totalShapes / 2)) + 1;
-
-        // 4. Buat array bentuk
-        const levelShapes = [];
-        for (let i = 0; i < correctAnswer; i++) {
-            levelShapes.push({ type: targetShape, color: targetColor });
-        }
-
-        // 5. Isi sisa bentuk dengan "pengganggu" (distractors) - PERBAIKAN KRUSIAL
-        for (let i = levelShapes.length; i < totalShapes; i++) {
-            let distractorShape, distractorColor;
-            // Pastikan pengganggu tidak sama dengan target
-            do {
-                distractorShape = getRandomItem(availableShapes);
-                distractorColor = getRandomItem(availableColors);
-            } while (distractorShape === targetShape && distractorColor === targetColor);
-
-            levelShapes.push({ type: distractorShape, color: distractorColor });
-        }
-
-        // 6. Buat pilihan jawaban
-        const choices = [correctAnswer];
-        while (choices.length < 4) {
-            let wrongAnswer = getRandomItem([correctAnswer - 1, correctAnswer + 1, correctAnswer - 2, correctAnswer + 2]);
-            if (wrongAnswer > 0 && wrongAnswer <= totalShapes && !choices.includes(wrongAnswer)) {
-                choices.push(wrongAnswer);
-            }
-        }
-
-        return {
-            shapes: shuffleArray(levelShapes),
-            question: { type: targetShape, color: targetColor },
-            choices: shuffleArray(choices),
-            correctAnswer: correctAnswer // Simpan jawaban benar
-        };
+    
+    function getRandomItem(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
     }
+
 
     // --- Logika Inti Permainan ---
     function startGame() {
-        currentLevel = 1;
+        currentLevel = 0;
         startScreen.classList.remove('active');
         endScreen.classList.remove('active');
         playScreen.classList.add('active');
-        totalLevelsEl.textContent = MAX_LEVEL;
+        totalLevelsEl.textContent = levels.length;
         loadLevel(currentLevel);
     }
 
-    function loadLevel(levelNumber) {
-        currentLevelData = generateLevel(levelNumber); // Simpan data level
-        currentLevelEl.textContent = levelNumber;
+    function loadLevel(levelIndex) {
+        if (levelIndex >= levels.length) {
+            showEndScreen();
+            return;
+        }
+
+        const level = levels[levelIndex];
+        currentLevelEl.textContent = levelIndex + 1;
 
         // Reset tampilan
         shapesContainer.innerHTML = '';
@@ -124,13 +147,15 @@ document.addEventListener('DOMContentLoaded', () => {
         answerButtons.forEach(btn => {
             btn.disabled = false;
             btn.style.opacity = '1';
-            btn.style.backgroundColor = ''; // Kembalikan ke warna semula
         });
 
+        // Acak posisi bentuk
+        const shuffledShapes = shuffleArray([...level.shapes]);
+
         // Generate bentuk
-        currentLevelData.shapes.forEach(shapeData => {
+        shuffledShapes.forEach(shapeData => {
             const colorHex = COLORS[shapeData.color];
-            const shapeClass = SHAPES[shapeData.type];
+            const shapeClass = SHAPE_CLASS_MAP[shapeData.type];
             
             const shapeEl = document.createElement('div');
             shapeEl.classList.add('shape');
@@ -148,23 +173,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         // Tampilkan pertanyaan
-        questionEl.textContent = `Ada berapa ${currentLevelData.question.type} berwarna ${currentLevelData.question.color}?`;
+        questionEl.textContent = `Ada berapa ${level.question.type} berwarna ${level.question.color}?`;
 
         // Siapkan tombol jawaban
+        const shuffledChoices = shuffleArray([...level.choices]);
         answerButtons.forEach((btn, index) => {
-            btn.textContent = currentLevelData.choices[index];
-            btn.dataset.answer = currentLevelData.choices[index];
+            btn.textContent = shuffledChoices[index];
+            btn.dataset.answer = shuffledChoices[index];
         });
     }
 
     function selectAnswer(e) {
-        if (e.target.disabled) return; // Mencegah klik ganda
-
         const selectedButton = e.target;
         const chosenAnswer = parseInt(selectedButton.dataset.answer);
-        
-        // Gunakan currentLevelData untuk pengecekan
-        if (chosenAnswer === currentLevelData.correctAnswer) {
+        const level = levels[currentLevel];
+        const correctAnswer = level.shapes.filter(s => s.type === level.question.type && s.color === level.question.color).length;
+
+        if (chosenAnswer === correctAnswer) {
             feedbackEl.textContent = 'Hebat! Kamu benar! ✨';
             feedbackEl.className = 'success';
             selectedButton.style.backgroundColor = 'var(--success-color)';
@@ -182,11 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function nextLevel() {
         currentLevel++;
-        if (currentLevel > MAX_LEVEL) {
-            showEndScreen();
-        } else {
-            loadLevel(currentLevel);
-        }
+        loadLevel(currentLevel);
     }
     
     function showEndScreen() {
